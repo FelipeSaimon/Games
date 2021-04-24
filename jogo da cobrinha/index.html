@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snake game</title>
+</head>
+<body>
+    <canvas id="palco" width="400" height="400" ></canvas>
+
+    <script>
+        window.onload = function(){    
+            var c = document.getElementById("palco");
+            var ctx = c.getContext("2d");
+
+            document.addEventListener("keydown", keyPush);
+
+            setInterval(game, 100); /*SetInterval chama uma função a cada tempo determinado no intervalo definido*/
+            const veloc = 1 /*A cada intervalo a cobrinha movimentará uma 'casa'*/
+
+            var vx = vy = 0;
+            var px = py = 5
+            var tp = 20;
+            var qtdp = 20;
+            var mx = my = 12;  
+            var snake = [];
+            var calda = 5;     
+
+            function game(){
+                px += vx;
+                py += vy;
+
+                if(px < 0){
+                    px = qtdp-1;
+                }
+                if(px > qtdp-1){
+                    px = 0;
+                }
+                if(py < 0){
+                    py = qtdp-1;
+                }
+                if(py > qtdp-1 ){
+                    py = 0;
+                }
+
+
+
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0, palco.width, palco.height);
+
+                ctx.fillStyle = "red";
+                ctx.fillRect(mx*tp, my*tp, tp, tp);
+
+                ctx.fillStyle = "gray";
+                for(var i = 0; i < snake.length; i++){
+                    ctx.fillRect(snake[i].x*tp, snake[i].y*tp, tp, tp);
+                    if(snake[i].x == px && snake[i].y == py){
+                        vx=vy=0;
+                        calda = 5;
+                    }
+ 
+                }
+ /*Esse objeto trata a inserção de uma peça no array da snake >> movimentação da snake*/
+                snake.push({x:px, y:py})
+
+/*Faz a remoção caso o tamnho da snake fique maior que a calda*/
+                while(snake.length > calda){
+                    snake.shift();
+                }
+
+                if(mx == px && my == py){
+                    calda++;
+                    mx = Math.floor(Math.random()*qtdp);
+                    my = Math.floor(Math.random()*qtdp);
+                }
+            }
+
+            function keyPush(event){
+                switch(event.keyCode){
+                    case 37: //esqr
+                        vx = -veloc;
+                        vy = 0;
+                        break;
+                    case 38: //cima
+                        vx = 0;
+                        vy = -veloc;
+                        break;
+                    case 39: //direita
+                        vx = veloc;
+                        vy = 0;
+                        break;
+                    case 40: //baixo
+                        vx = 0;
+                        vy = veloc;
+                        break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
